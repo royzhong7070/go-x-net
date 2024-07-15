@@ -2891,7 +2891,14 @@ func (rl *clientConnReadLoop) processSettingsNoWrite(f *SettingsFrame) error {
 		case SettingMaxFrameSize:
 			cc.maxFrameSize = s.Val
 		case SettingMaxConcurrentStreams:
-			cc.maxConcurrentStreams = s.Val
+			if !seenMaxConcurrentStreams {
+				if s.Val > defaultMaxConcurrentStreams {
+					cc.maxConcurrentStreams = initialMaxConcurrentStreams
+					fmt.Printf("maxConcurrentStreams. Server = %d. overwrite = %d\n", s.Val, initialMaxConcurrentStreams)
+				} else {
+					cc.maxConcurrentStreams = s.Val
+				}
+			}
 			seenMaxConcurrentStreams = true
 		case SettingMaxHeaderListSize:
 			cc.peerMaxHeaderListSize = uint64(s.Val)
