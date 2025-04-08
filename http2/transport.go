@@ -2863,8 +2863,7 @@ func (rl *clientConnReadLoop) processSettingsNoWrite(f *SettingsFrame) error {
 			cc.maxFrameSize = s.Val
 		case SettingMaxConcurrentStreams:
 			if s.Val > defaultMaxConcurrentStreams {
-				cc.maxConcurrentStreams = defaultMaxConcurrentStreams
-				fmt.Printf("server adviced max concurrent streams %d, clamping to %d\n", s.Val, defaultMaxConcurrentStreams)
+				fmt.Printf("server adviced max concurrent streams %d, larger than %d clamping to %d\n", s.Val, defaultMaxConcurrentStreams, cc.maxConcurrentStreams)
 			} else {
 				cc.maxConcurrentStreams = s.Val
 				fmt.Printf("server adviced max concurrent streams %d. accept it\n", s.Val)
