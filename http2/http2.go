@@ -43,6 +43,7 @@ var (
 	//
 	// Issue #71128.
 	disableExtendedConnectProtocol = true
+	clampedMaxConcurrentStreams    = uint32(initialMaxConcurrentStreams)
 )
 
 func init() {
@@ -57,6 +58,11 @@ func init() {
 	}
 	if strings.Contains(e, "http2xconnect=1") {
 		disableExtendedConnectProtocol = false
+	}
+	if s := os.Getenv("HTTP2MAXCONCURRENTSTREAMS"); s != "" {
+		if v, err := strconv.Atoi(s); err == nil && v > 0 {
+			clampedMaxConcurrentStreams = uint32(v)
+		}
 	}
 }
 
